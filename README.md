@@ -22,7 +22,7 @@ timetoUTC [YYYY/MM/DD] [HH:MM] [ORG Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM] [ORG Abbr]
 ```
 
-3. Original UTC offset to Target UTC offset
+3. Original UTC offset to target UTC offset
 ```
 timetoUTC [YYYY/MM/DD] [HH:MM:SS] [ORG Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM:SS] [ORG Abbr]
@@ -31,7 +31,7 @@ timetoUTC [YYYY-MM-DD] [HH:MM] [ORG Abbr]
 
 ```
 
-4. Original time to Target time on timezone abbreviations
+4. Original time to target time on timezone abbreviations
 ```
 timetoUTC [YYYY/MM/DD] [HH:MM:SS] [ORG Abbr] [TGZ Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM:SS] [ORG Abbr] [TGZ Abbr]
@@ -57,7 +57,7 @@ Original time: 2023/04/10 09:00 UTC+9
      UTC time: 2023/04/10 00:00 UTC
 ```
 
-3. Original time UTC-7 to Target time UTC+9
+3. Original time UTC-7 to target time UTC+9
 ```
 timetoUTC 2023/04/21 12:59:59 UTC-7 UTC+9
 
@@ -65,7 +65,7 @@ Original time: 2023/04/21 12:59:59 UTC-7
   Target time: 2023/04/22 04:59:59 UTC+9
 ```
 
-4. Original time PDT to Target time NZST
+4. Original time PDT to target time NZST
 ```
 timetoUTC 2023-04-21 15:49:42 PDT NZST
 
