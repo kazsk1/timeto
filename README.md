@@ -9,7 +9,7 @@ go install github.com/kazsk1/timetoUTC@latest
 ```
 
 
-## Instructions
+## Usages
 1. UTC (RFC3339) to local time on a timezone abbreviation such as "JST", "PDT", and "SGT"
 ```
 ./timetoUTC 2023-04-22T09:49:59Z JST
@@ -45,4 +45,4 @@ Original time: 2023-04-21 15:49:42 PDT
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
