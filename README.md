@@ -14,7 +14,7 @@ go install github.com/kazsk1/timetoUTC@master
 timetoUTC [YYYY-MM-DDTHH:MM:SSZ] [TGZ Abbr]
 ```
 
-2. Change original UTC offset to UTC time
+2. Change original UTC offset into UTC time
 ```
 timetoUTC [YYYY/MM/DD] [HH:MM:SS] [ORG Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM:SS] [ORG Abbr]
@@ -22,7 +22,7 @@ timetoUTC [YYYY/MM/DD] [HH:MM] [ORG Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM] [ORG Abbr]
 ```
 
-3. Change original UTC offset to target UTC offset
+3. Change original UTC offset into target UTC offset
 ```
 timetoUTC [YYYY/MM/DD] [HH:MM:SS] [ORG Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM:SS] [ORG Abbr]
@@ -31,7 +31,7 @@ timetoUTC [YYYY-MM-DD] [HH:MM] [ORG Abbr]
 
 ```
 
-4. Change original time to target time on timezone abbreviations
+4. Change original time into target time on timezone abbreviations
 ```
 timetoUTC [YYYY/MM/DD] [HH:MM:SS] [ORG Abbr] [TGZ Abbr]
 timetoUTC [YYYY-MM-DD] [HH:MM:SS] [ORG Abbr] [TGZ Abbr]
@@ -41,7 +41,7 @@ timetoUTC [YYYY-MM-DD] [HH:MM] [ORG Abbr] [TGZ Abbr]
 
 ## Examples
 
-1. UTC (RFC3339) -> Ttarget time on a timezone abbreviation such as "JST"
+1. UTC (RFC3339) -->> Target time on a timezone abbreviation such as "JST"
 ```
 timetoUTC 2023-04-22T09:49:59Z JST
 
@@ -49,7 +49,7 @@ Original time: 2023/04/22 09:49:59 UTC
   Target time: 2023/04/22 18:49:59 JST
 ```
 
-2. Original time UTC+9 -> UTC time
+2. Original time UTC+9 -->> UTC time
 ```
 timetoUTC 2023/04/10 09:00 UTC+9
 
@@ -57,7 +57,7 @@ Original time: 2023/04/10 09:00 UTC+9
      UTC time: 2023/04/10 00:00 UTC
 ```
 
-3. Original time UTC-7 -> Target time UTC+9
+3. Original time UTC-7 -->> Target time UTC+9
 ```
 timetoUTC 2023/04/21 12:59:59 UTC-7 UTC+9
 
@@ -65,7 +65,7 @@ Original time: 2023/04/21 12:59:59 UTC-7
   Target time: 2023/04/22 04:59:59 UTC+9
 ```
 
-4. Original time PDT -> Target time NZST
+4. Original time PDT -->> Target time NZST
 ```
 timetoUTC 2023-04-21 15:49:42 PDT NZST
 
