@@ -5,7 +5,7 @@ timetoUTC is a simple command-line tool for time difference calculation.
 ## Getting Started
 
 ```
-go install github.com/kazsk1/timetoUTC@master
+go install github.com/kazsk1/timetoUTC@main
 ```
 
 ## Usage
