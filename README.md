@@ -9,7 +9,7 @@ go install github.com/kazsk1/timetoUTC@main
 ```
 
 ## Usage
-1. Change UTC (RFC3339) into target time on a timezone abbreviation such as "JST", "PDT", and "SGT"
+1. Change UTC (RFC3339) into target time on a timezone abbreviation such as JST, PDT and SGT
 ```
 timetoUTC [YYYY-MM-DDTHH:MM:SSZ] [TG Abbr]
 ```
@@ -41,7 +41,7 @@ timetoUTC [YYYY-MM-DD] [HH:MM] [OG Abbr] [TZ Abbr]
 
 ## Examples
 
-1. UTC (RFC3339) >> Target time on a timezone abbreviation such as "JST"
+1. UTC (RFC3339) >> Target time on a timezone abbreviation such as JST
 ```
 timetoUTC 2023-04-22T09:49:59Z JST
 
