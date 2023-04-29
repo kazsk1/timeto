@@ -1,5 +1,4 @@
 package main
-
 import (
 	"fmt"
 	"os"
@@ -9,9 +8,8 @@ import (
 	"time"
 )
 
-// bug 1 // go run main.go 2023-04-22T09:49:59Z00:00 JST
-// bug 2 // go run main.go 2023/04/22 09:00 JS
-// bug 3 // go run main.go 2023-04-21 15:49:42 PDT NZS
+// bug 1 // go run main.go 2023-04-22T09:49:59+09:00 JST
+// bug 2 // go run main.go 2023-04-21 15:49:42 PDT NZS
 
 func param(z int) string {
 
@@ -62,7 +60,7 @@ func main() {
 
 	fmt.Printf("\n")
 
-	if len(os.Args) == 3 {
+	if (len(os.Args) == 3 && len(os.Args[2]) == 3) || (len(os.Args) == 3 && len(os.Args[2]) == 4) {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
 		inc, _ := strconv.Atoi((strings.Trim(param(2), "UTC")))
@@ -72,7 +70,7 @@ func main() {
 		arg1 := strings.Split(os.Args[1], "-")
 		arg2 := strings.Split(os.Args[1], ":")
 
-		// 22T09:49:59Z -> 10
+		// 22T09:49:59Z -> 22
 		rep1 := regexp.MustCompile(`T.*`)
 		str1 := rep1.ReplaceAllString(arg1[2], "")
 
@@ -81,7 +79,7 @@ func main() {
 		str2 := rep2.ReplaceAllString(arg2[0], "")
 
 		// 59Z -> 59
-		rep3 := regexp.MustCompile(`Z`)
+		rep3 := regexp.MustCompile(`Z.*`)
 		str3 := rep3.ReplaceAllString(arg2[2], "")
 
 		h, _ := strconv.Atoi(str2)
@@ -112,7 +110,8 @@ func main() {
 
 	}
 
-	if len(os.Args) == 4 {
+
+	if len(os.Args) == 4 && len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
 		inc, _ := strconv.Atoi((strings.Trim(param(3), "UTC")))
@@ -222,7 +221,8 @@ func main() {
 		}
 	}
 
-	if len(os.Args) == 5 {
+
+	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6) && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6) {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
 		inc1, _ := strconv.Atoi((strings.Trim(param(3), "UTC")))
