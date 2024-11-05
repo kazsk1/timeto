@@ -33,10 +33,10 @@ timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset] [TZ UTC offset]
 4) Change original time into target time on timezone abbreviations
 ```powershell or go
 timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TZ UTC offset]
-timeto [YYYY/MM/DD] [HH:MM:SS] [OG Abbr] [TZ Abbr]
-timeto [YYYY-MM-DD] [HH:MM:SS] [OG Abbr] [TZ Abbr]
-timeto [YYYY/MM/DD] [HH:MM] [OG Abbr] [TZ Abbr]
-timeto [YYYY-MM-DD] [HH:MM] [OG Abbr] [TZ Abbr]
+timeto [YYYY/MM/DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
+timeto [YYYY-MM-DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
+timeto [YYYY/MM/DD] [HH:MM] [OG Abbr] [TG Abbr]
+timeto [YYYY-MM-DD] [HH:MM] [OG Abbr] [TG Abbr]
 ```
 
 ## Examples
