@@ -54,24 +54,24 @@ timeto 2023-04-22T09:49:59Z JST
 timeto 2023/04/10 09:00 UTC+9
 ```
 > Conversion  
->   Original time: 2023/04/10 09:00 UTC+9  
->        UTC time: 2023/04/10 00:00 UTC  
+>  &ensp; Original time: 2023/04/10 09:00 UTC+9  
+>  &ensp;      UTC time: 2023/04/10 00:00 UTC  
 
 3) Convert Original time UTC-7 to Target time UTC+9
 ```
 timeto 2023/04/21 12:59:59 UTC-7 UTC+9
 ```
 > Conversion  
->   Original time: 2023/04/21 12:59:59 UTC-7  
->     Target time: 2023/04/22 04:59:59 UTC+9  
+>  &ensp; Original time: 2023/04/21 12:59:59 UTC-7  
+>  &ensp;   Target time: 2023/04/22 04:59:59 UTC+9  
 
 4) Convert Original time PDT to Target time NZST
 ```
 timeto 2023-04-21 15:49:42 PDT NZST
 ```
 > Conversion  
->   Original time: 2023-04-21 15:49:42 PDT  
->     Target time: 2023-04-22 10:49:42 NZST  
+>  &ensp; Original time: 2023-04-21 15:49:42 PDT  
+>  &ensp;   Target time: 2023-04-22 10:49:42 NZST  
 
 
 ## License
