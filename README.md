@@ -1,7 +1,7 @@
 # timeto
 timeto is a simple command-line tool for time difference calculation.
 
-![clock](images/clock5.png)
+![clock](images/clock6.png)
 
 ## Getting Started
 
