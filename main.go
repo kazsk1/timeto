@@ -63,7 +63,8 @@ func param(z int) string {
 
 func main() {
 
-	fmt.Printf("\n")
+	//fmt.Printf("\n")
+	fmt.Printf("\033[36mConversion\033[0m\n")
 
 	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && param(2) != "false" {
 
@@ -110,8 +111,8 @@ func main() {
 		targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
 
 		// Print the original and converted times
-		fmt.Println("Original time:", t.Format("2006/01/02 15:04:05 MST"))
-		fmt.Println("  Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
+		fmt.Println("  Original time:", t.Format("2006/01/02 15:04:05 MST"))
+		fmt.Println("    Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
 
 	}
 
@@ -172,14 +173,14 @@ func main() {
 
 			if s == 0 {
 				// Print the original and converted times
-				fmt.Println("Original time:", t.Format("2006/01/02 15:04 MST"))
-				fmt.Println("     UTC time:", utc.Format("2006/01/02 15:04 MST"))
+				fmt.Println("  Original time:", t.Format("2006/01/02 15:04 MST"))
+				fmt.Println("       UTC time:", utc.Format("2006/01/02 15:04 MST"))
 			}
 
 			if s != 0 {
 				// Print the original and converted times
-				fmt.Println("Original time:", t.Format("2006/01/02 15:04:05 MST"))
-				fmt.Println("     UTC time:", utc.Format("2006/01/02 15:04:05 MST"))
+				fmt.Println("  Original time:", t.Format("2006/01/02 15:04:05 MST"))
+				fmt.Println("       UTC time:", utc.Format("2006/01/02 15:04:05 MST"))
 			}
 
 		} else if len(arg2) == 3 {
@@ -216,14 +217,14 @@ func main() {
 
 			if s == 0 {
 				// Print the original and converted times
-				fmt.Println("Original time:", t.Format("2006-01-02 15:04 MST"))
-				fmt.Println("     UTC time:", utc.Format("2006-01-02 15:04 MST"))
+				fmt.Println("  Original time:", t.Format("2006-01-02 15:04 MST"))
+				fmt.Println("       UTC time:", utc.Format("2006-01-02 15:04 MST"))
 			}
 
 			if s != 0 {
 				// Print the original and converted times
-				fmt.Println("Original time:", t.Format("2006-01-02 15:04:05 MST"))
-				fmt.Println("     UTC time:", utc.Format("2006-01-02 15:04:05 MST"))
+				fmt.Println("  Original time:", t.Format("2006-01-02 15:04:05 MST"))
+				fmt.Println("       UTC time:", utc.Format("2006-01-02 15:04:05 MST"))
 			}
 
 		}
@@ -286,14 +287,14 @@ func main() {
 
 			if s == 0 {
 				// Print the original and target times.
-				fmt.Println("Original time:", t.Format("2006/01/02 15:04 MST"))
-				fmt.Println("  Target time:", targetTime.Format("2006/01/02 15:04 MST"))
+				fmt.Println("  Original time:", t.Format("2006/01/02 15:04 MST"))
+				fmt.Println("    Target time:", targetTime.Format("2006/01/02 15:04 MST"))
 			}
 
 			if s != 0 {
 				// Print the original and target times.
-				fmt.Println("Original time:", t.Format("2006/01/02 15:04:05 MST"))
-				fmt.Println("  Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
+				fmt.Println("  Original time:", t.Format("2006/01/02 15:04:05 MST"))
+				fmt.Println("    Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
 			}
 
 		} else if len(arg2) == 3 {
@@ -327,14 +328,14 @@ func main() {
 
 			if s == 0 {
 				// Print the original and target times.
-				fmt.Println("Original time:", t.Format("2006-01-02 15:04 MST"))
-				fmt.Println("  Target time:", targetTime.Format("2006-01-02 15:04 MST"))
+				fmt.Println("  Original time:", t.Format("2006-01-02 15:04 MST"))
+				fmt.Println("    Target time:", targetTime.Format("2006-01-02 15:04 MST"))
 			}
 
 			if s != 0 {
 				// Print the original and target times.
-				fmt.Println("Original time:", t.Format("2006-01-02 15:04:05 MST"))
-				fmt.Println("  Target time:", targetTime.Format("2006-01-02 15:04:05 MST"))
+				fmt.Println("  Original time:", t.Format("2006-01-02 15:04:05 MST"))
+				fmt.Println("    Target time:", targetTime.Format("2006-01-02 15:04:05 MST"))
 			}
 
 		}

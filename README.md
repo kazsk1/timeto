@@ -9,7 +9,7 @@ go install github.com/kazsk1/timeto@main
 ```
 
 ## Usage
-1) Change UTC (RFC3339) into target time on a timezone abbreviation such as JST, PDT and SGT
+1) Change UTC (RFC3339) into target time using abbreviation such as JST, PDT and SGT
 ```powershell or go
 timeto [YYYY-MM-DDTHH:MM:SSZ] [TG Abbr]
 ```
