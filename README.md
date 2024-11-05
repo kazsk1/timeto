@@ -46,8 +46,8 @@ timeto [YYYY-MM-DD] [HH:MM] [OG Abbr] [TZ Abbr]
 timeto 2023-04-22T09:49:59Z JST
 ```
 > Conversion  
->   Original time: 2023/04/22 09:49:59 UTC  
->     Target time: 2023/04/22 18:49:59 JST  
+>  &ensp; Original time: 2023/04/22 09:49:59 UTC  
+>  &ensp;   Target time: 2023/04/22 18:49:59 JST  
 
 2) Convert Original time UTC+9 to Target time UTC
 ```
