@@ -55,7 +55,7 @@ timeto 2023/04/10 09:00 UTC+9
 ```
 > Conversion  
 >  &ensp; Original time: 2023/04/10 09:00 UTC+9  
->  &ensp;&ensp;&ensp;&ensp; UTC time: 2023/04/10 00:00 UTC  
+>  &ensp;&ensp;&ensp;&ensp;&ensp; UTC time: 2023/04/10 00:00 UTC  
 
 3) Convert Original time UTC-7 to Target time UTC+9
 ```
