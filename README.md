@@ -10,7 +10,7 @@ go install github.com/kazsk1/timeto@main
 ```
 
 ## Usage
-1) Change UTC (RFC3339) into target time using abbreviation such as JST, PDT and SGT
+1) Change UTC (RFC3339) into target time of abbreviation such as JST, PDT and SGT
 ```powershell or go
 timeto [YYYY-MM-DDTHH:MM:SSZ] [TG Abbr]
 ```
@@ -25,15 +25,15 @@ timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset]
 
 3) Change original UTC offset into target UTC offset
 ```powershell or go
-timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TZ UTC offset]
-timeto [YYYY-MM-DD] [HH:MM:SS] [OG UTC offset] [TZ UTC offset]
-timeto [YYYY/MM/DD] [HH:MM] [OG UTC offset] [TZ UTC offset]
-timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset] [TZ UTC offset]
+timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TG UTC offset]
+timeto [YYYY-MM-DD] [HH:MM:SS] [OG UTC offset] [TG UTC offset]
+timeto [YYYY/MM/DD] [HH:MM] [OG UTC offset] [TG UTC offset]
+timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset] [TG UTC offset]
 ```
 
-4) Change original time into target time on timezone abbreviations
+4) Change original time into target time of timezone abbreviations
 ```powershell or go
-timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TZ UTC offset]
+timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TG UTC offset]
 timeto [YYYY/MM/DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
 timeto [YYYY-MM-DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
 timeto [YYYY/MM/DD] [HH:MM] [OG Abbr] [TG Abbr]
