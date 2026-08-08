@@ -45,7 +45,8 @@ go install github.com/kazsk1/timeto@main
 
 5. Convert UNIX time to UTC.
    ```bash or powershell
-   timeto [UNIX time] 
+   timeto [UNIX time in seconds] 
+   timeto [UNIX time in milliseconds] 
    ```
 
 ## Examples
