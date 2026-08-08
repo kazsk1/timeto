@@ -64,7 +64,7 @@ go install github.com/kazsk1/timeto@main
    ```
    > Conversion  
    > &ensp; Original time: 2023/04/10 09:00 UTC+9  
-   > &ensp; &ensp; UTC time: 2023/04/10 00:00 UTC  
+   > &ensp; &ensp; &ensp; UTC time: 2023/04/10 00:00 UTC  
 
 3. Convert UTC-7 to UTC+9.
    ```bash or powershell
