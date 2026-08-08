@@ -36,7 +36,7 @@ go install github.com/kazsk1/timeto@main
    ```
 
 4. Convert original timezone abbreviations to target timezone abbreviations.
-   ```bash or powershell
+   ```bash 
    timeto [YYYY/MM/DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
    timeto [YYYY-MM-DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
    timeto [YYYY/MM/DD] [HH:MM] [OG Abbr] [TG Abbr]
@@ -44,7 +44,7 @@ go install github.com/kazsk1/timeto@main
    ```
 
 5. Convert UNIX time to UTC.
-   ```bash or powershell
+   ```bash 
    timeto [UNIX time] 
    ```
 
@@ -75,7 +75,7 @@ go install github.com/kazsk1/timeto@main
    > &ensp; &ensp; Target time: 2023/04/22 04:59:59 UTC+9  
 
 4. Convert PDT to NZST.
-   ```bash or powershell
+   ```bash 
    timeto 2023-04-21 15:49:42 PDT NZST
    ```
    > Conversion  
@@ -83,7 +83,7 @@ go install github.com/kazsk1/timeto@main
    > &ensp; &ensp; Target time: 2023-04-22 10:49:42 NZST  
 
 5. Convert UNIX time to UTC.
-   ```bash or powershell
+   ```bash 
    timeto 1718000000123
    ```
    > Conversion  
