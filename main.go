@@ -69,10 +69,10 @@ func main() {
 		//fmt.Println(len(os.Args))
 		//fmt.Println(len(os.Args[1]))
 		//fmt.Println(os.Args[1])
-		
+
 		// Check 10 diigits for UNIX time in seconds
 		if len(os.Args[1]) < 10 {
-		        fmt.Printf("\033[33mUNIX time requires 10 digits.\033[0m\n")
+			fmt.Printf("\033[33mUNIX time requires 10 digits.\033[0m\n")
 			fmt.Println(" You put", len(os.Args[1]), "digits.")
 		}
 
@@ -96,8 +96,8 @@ func main() {
 		}
 
 		// Check 13 diigits for UNIX time in miliseconds
-		if len(os.Args[1]) > 10 && len(os.Args[1]) < 13  {
-		        fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
+		if len(os.Args[1]) > 10 && len(os.Args[1]) < 13 {
+			fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
 			fmt.Println(" You put", len(os.Args[1]), "digits.")
 		}
 
@@ -122,7 +122,7 @@ func main() {
 
 		// Check 13 diigits for UNIX time in miliseconds
 		if len(os.Args[1]) > 13 {
-		        fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
+			fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
 			fmt.Println(" You put", len(os.Args[1]), "digits.")
 		}
 
