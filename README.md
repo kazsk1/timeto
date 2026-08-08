@@ -88,7 +88,7 @@ go install github.com/kazsk1/timeto@main
    ```
    > Conversion  
    > &ensp; UNIX time: 1718000000123  
-   > &ensp; &ensp; UTC time: 2024-06-10 06:13:20.123 UTC 
+   > &ensp; &ensp;UTC time: 2024-06-10 06:13:20.123 UTC 
 
 
 ## License
