@@ -79,16 +79,16 @@ go install github.com/kazsk1/timeto@main
    timeto 2023-04-21 15:49:42 PDT NZST
    ```
    > Conversion  
-   >  Original time: 2023-04-21 15:49:42 PDT  
-   >    Target time: 2023-04-22 10:49:42 NZST  
+   >   Original time: 2023-04-21 15:49:42 PDT  
+   >     Target time: 2023-04-22 10:49:42 NZST  
 
 5. Convert UNIX time to UTC.
    ```bash or powershell
    timeto 1718000000123
    ```
-   > Conversion
-   >  UNIX time: 1718000000123  
-   >   UTC time: 2024-06-10 06:13:20.123 UTC 
+   > Conversion  
+   >   UNIX time: 1718000000123  
+   >    UTC time: 2024-06-10 06:13:20.123 UTC 
 
 
 ## License
