@@ -11,7 +11,7 @@ import (
 
 // bug 1 // go run main.go 2023-04-22T09:49:59+09:00 JST
 
-// Timezone abbreviations -> UTC Offset //
+// TZ abbr. -> UTC offset //
 func param(z int) string {
 
 	// PST, PDT, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
@@ -131,6 +131,7 @@ func main() {
 
 	}
 
+	// UTC (RFC3339) -> TZ abbr. //
 	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && param(2) != "false" {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
@@ -182,6 +183,7 @@ func main() {
 
 	}
 
+	// UTC offset -> UTC //
 	if len(os.Args) == 4 && len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && param(3) != "false" {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
@@ -299,7 +301,8 @@ func main() {
 
 		}
 	}
-
+	
+	// UTC offset or TZ abbr. -> UTC offset or TZ abbr. //
 	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && param(3) != "false") && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6 && param(4) != "false") {
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
