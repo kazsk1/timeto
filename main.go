@@ -16,6 +16,9 @@ func param(z int) string {
 
 	// PST, PDT, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
 	// pst, pdt, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
+	if z >= len(os.Args) {
+		return "false"
+	}
 	x := strings.ToUpper(os.Args[z])
 	y := ""
 
@@ -53,7 +56,7 @@ func param(z int) string {
 	x = strings.ReplaceAll(y, "SGT", "UTC+8")
 
 	// Check UTC, UTC+1, UTC+2, ... UTC+12, or UTC-1, UTC-2, .... UTC-11 //
-	ck, _ := regexp.MatchString(`UTC$|UTC[+-][1-9]`, x)
+	ck, _ := regexp.MatchString(`^UTC$|^UTC[+-]([1-9]|1[0-2])$`, x)
 	if ck == true {
 		return x
 	}
