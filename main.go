@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// bug 1 // go run main.go 2023-04-22T09:49:59+09:00 JST
 
 // TZ abbr. -> UTC offset //
 func param(z int) string {
@@ -134,52 +133,64 @@ func main() {
 	// UTC (RFC3339) -> TZ abbr. //
 	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && param(2) != "false" {
 
-		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc, _ := strconv.Atoi((strings.Trim(param(2), "UTC")))
+		// test arg
+		//fmt.Println(len(os.Args))
+		//fmt.Println(len(os.Args[2]))
+		//fmt.Println(os.Args[2])
+		//fmt.Println(len(os.Args[1]))
+		//fmt.Println(os.Args[1])
 
-		// Split 2023-04-22T09:49:59Z to 2023 04 22T09:49:59Z
-		// Split 2023-04-22T09:49:59Z to 2023-04-22T09 49 59Z
-		arg1 := strings.Split(os.Args[1], "-")
-		arg2 := strings.Split(os.Args[1], ":")
+		// Check 20 length for UTC (RFC3339)
+		if len(os.Args[1]) == 20 {
 
-		// 22T09:49:59Z -> 22
-		rep1 := regexp.MustCompile(`T.*`)
-		str1 := rep1.ReplaceAllString(arg1[2], "")
+			// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
+			inc, _ := strconv.Atoi((strings.Trim(param(2), "UTC")))
 
-		// 2023-04-22T09 -> 09
-		rep2 := regexp.MustCompile(`.*T`)
-		str2 := rep2.ReplaceAllString(arg2[0], "")
+			// Split 2023-04-22T09:49:59Z to 2023 04 22T09:49:59Z
+			// Split 2023-04-22T09:49:59Z to 2023-04-22T09 49 59Z
+			arg1 := strings.Split(os.Args[1], "-")
+			arg2 := strings.Split(os.Args[1], ":")
 
-		// 59Z -> 59
-		rep3 := regexp.MustCompile(`Z.*`)
-		str3 := rep3.ReplaceAllString(arg2[2], "")
+			// 22T09:49:59Z -> 22
+			rep1 := regexp.MustCompile(`T.*`)
+			str1 := rep1.ReplaceAllString(arg1[2], "")
 
-		h, _ := strconv.Atoi(str2)
-		min, _ := strconv.Atoi(arg2[1])
-		s, _ := strconv.Atoi(str3)
+			// 2023-04-22T09 -> 09
+			rep2 := regexp.MustCompile(`.*T`)
+			str2 := rep2.ReplaceAllString(arg2[0], "")
 
-		// test command 3 // go run main.go 2023-04-22T09:49:59Z JST
-		// test command 4 // go run main.go 2023-04-22T09:49:59Z PDT
-		// test command 5 // go run main.go 2023-04-22T09:49:59Z Est
-		// test command 6 // go run main.go 2023-04-22T09:49:59Z cest
-		// test command 7 // go run main.go 2023-04-22T09:49:59Z west
+			// 59Z -> 59
+			rep3 := regexp.MustCompile(`Z.*`)
+			str3 := rep3.ReplaceAllString(arg2[2], "")
 
-		year, _ := strconv.Atoi(arg1[0])
-		var m, _ = strconv.Atoi(arg1[1])
-		d, _ := strconv.Atoi(str1)
+			h, _ := strconv.Atoi(str2)
+			min, _ := strconv.Atoi(arg2[1])
+			s, _ := strconv.Atoi(str3)
 
-		t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone("UTC", 0*60*60))
+			// test command 3 // go run main.go 2023-04-22T09:49:59Z JST
+			// test command 4 // go run main.go 2023-04-22T09:49:59Z PDT
+			// test command 5 // go run main.go 2023-04-22T09:49:59Z Est
+			// test command 6 // go run main.go 2023-04-22T09:49:59Z cest
+			// test command 7 // go run main.go 2023-04-22T09:49:59Z west
 
-		// Define the target time zone
-		targetTimeZone := time.FixedZone(strings.ToUpper(os.Args[2]), inc*60*60)
+			year, _ := strconv.Atoi(arg1[0])
+			var m, _ = strconv.Atoi(arg1[1])
+			d, _ := strconv.Atoi(str1)
 
-		// Convert the original time to the target time zone
-		targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
+			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone("UTC", 0*60*60))
 
-		// Print the original and converted times
-		fmt.Printf("\033[36mConversion\033[0m\n")
-		fmt.Println(" Original time:", t.Format("2006/01/02 15:04:05 MST"))
-		fmt.Println("   Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
+			// Define the target time zone
+			targetTimeZone := time.FixedZone(strings.ToUpper(os.Args[2]), inc*60*60)
+
+			// Convert the original time to the target time zone
+			targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
+
+			// Print the original and converted times
+			fmt.Printf("\033[36mConversion\033[0m\n")
+			fmt.Println(" Original time:", t.Format("2006/01/02 15:04:05 MST"))
+			fmt.Println("   Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
+
+		}
 
 	}
 
@@ -301,7 +312,7 @@ func main() {
 
 		}
 	}
-	
+
 	// UTC offset or TZ abbr. -> UTC offset or TZ abbr. //
 	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && param(3) != "false") && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6 && param(4) != "false") {
 
