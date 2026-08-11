@@ -11,7 +11,7 @@ import (
 
 
 // TZ abbr. -> UTC offset //
-func param(z int) string {
+func convertTZ(z int) string {
 
 	// PST, PDT, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
 	// pst, pdt, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
@@ -131,7 +131,7 @@ func main() {
 	}
 
 	// UTC (RFC3339) -> TZ abbr. //
-	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && param(2) != "false" {
+	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && convertTZ(2) != "false" {
 
 		// test arg
 		//fmt.Println(len(os.Args))
@@ -144,7 +144,7 @@ func main() {
 		if len(os.Args[1]) == 20 {
 
 			// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-			inc, _ := strconv.Atoi((strings.Trim(param(2), "UTC")))
+			inc, _ := strconv.Atoi((strings.Trim(convertTZ(2), "UTC")))
 
 			// Split 2023-04-22T09:49:59Z to 2023 04 22T09:49:59Z
 			// Split 2023-04-22T09:49:59Z to 2023-04-22T09 49 59Z
@@ -195,10 +195,19 @@ func main() {
 	}
 
 	// UTC offset -> UTC //
-	if len(os.Args) == 4 && len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && param(3) != "false" {
+	if len(os.Args) == 4 && len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && convertTZ(3) != "false" {
+		
+		// test arg
+		//fmt.Println(len(os.Args))
+		//fmt.Println(len(os.Args[3]))
+		//fmt.Println(os.Args[3])
+		//fmt.Println(len(os.Args[2]))
+		//fmt.Println(os.Args[2])
+		//fmt.Println(len(os.Args[1]))
+		//fmt.Println(os.Args[1])
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc, _ := strconv.Atoi((strings.Trim(param(3), "UTC")))
+		inc, _ := strconv.Atoi((strings.Trim(convertTZ(3), "UTC")))
 
 		// Split 2023/04/10 to 2023 4 10
 		// Split 2023-04-10 to 2023 4 10
@@ -314,13 +323,24 @@ func main() {
 	}
 
 	// UTC offset or TZ abbr. -> UTC offset or TZ abbr. //
-	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && param(3) != "false") && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6 && param(4) != "false") {
+	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && convertTZ(3) != "false") && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6 && convertTZ(4) != "false") {
+		
+		// test arg
+		//fmt.Println(len(os.Args))
+		//fmt.Println(len(os.Args[4]))
+		//fmt.Println(os.Args[4])
+		//fmt.Println(len(os.Args[3]))
+		//fmt.Println(os.Args[3])
+		//fmt.Println(len(os.Args[2]))
+		//fmt.Println(os.Args[2])
+		//fmt.Println(len(os.Args[1]))
+		//fmt.Println(os.Args[1])
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc1, _ := strconv.Atoi((strings.Trim(param(3), "UTC")))
+		inc1, _ := strconv.Atoi((strings.Trim(convertTZ(3), "UTC")))
 
 		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc2, _ := strconv.Atoi((strings.Trim(param(4), "UTC")))
+		inc2, _ := strconv.Atoi((strings.Trim(convertTZ(4), "UTC")))
 
 		// Split 2023/04/10 to 2023 4 10
 		// Split 2023-04-10 to 2023 4 10
