@@ -21,8 +21,6 @@ func convertTZ(z int) string {
 	x := strings.ToUpper(os.Args[z])
 	y := ""
 
-	y = strings.ReplaceAll(x, "WEST", "UTC+1")
-	x = strings.ReplaceAll(y, "WET", "UTC")
 	y = strings.ReplaceAll(x, "AEDT", "UTC+11")
 	x = strings.ReplaceAll(y, "AEST", "UTC+10")
 	y = strings.ReplaceAll(x, "AKDT", "UTC-8")
@@ -53,6 +51,8 @@ func convertTZ(z int) string {
 	x = strings.ReplaceAll(y, "PDT", "UTC-7")
 	y = strings.ReplaceAll(x, "PST", "UTC-8")
 	x = strings.ReplaceAll(y, "SGT", "UTC+8")
+	y = strings.ReplaceAll(x, "WEST", "UTC+1")
+	x = strings.ReplaceAll(y, "WET", "UTC")
 
 	// Check UTC, UTC+1, UTC+2, ... UTC+12, or UTC-1, UTC-2, .... UTC-11 //
 	ck, _ := regexp.MatchString(`^UTC$|^UTC[+-]([1-9]|1[0-2])$`, x)
