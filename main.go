@@ -3,450 +3,142 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
 
+var tzOffsets = map[string]int{
+	"AEDT": 11, "AEST": 10, "AKDT": -8, "AKST": -9,
+	"AWDT": 9, "AWST": 8, "CAT": 2, "CDT": -5,
+	"CEST": 2, "CET": 1, "CST": -6, "EAT": 3,
+	"EDT": -4, "EEST": 3, "EET": 2, "EST": -5,
+	"HDT": -9, "HKT": 8, "HST": -10, "JST": 9,
+	"KST": 9, "MDT": -6, "MSD": 4, "MSK": 3,
+	"MST": -7, "NZDT": 13, "NZST": 12, "PDT": -7,
+	"PST": -8, "SGT": 8, "WEST": 1, "WET": 0,
+	"UTC": 0,
+}
 
-// TZ abbr. -> UTC offset //
-func convertTZ(z int) string {
-
-	// PST, PDT, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
-	// pst, pdt, ..., SGT, JST ->  UTC-8, UTC-7, ..., UTC+8, UTC+9
-	if z >= len(os.Args) {
-		return "false"
+func parseLocation(tzStr string) (*time.Location, error) {
+	upper := strings.ToUpper(strings.TrimSpace(tzStr))
+	if offsetHours, ok := tzOffsets[upper]; ok {
+		return time.FixedZone(upper, offsetHours*3600), nil
 	}
-	x := strings.ToUpper(os.Args[z])
-	y := ""
-
-	y = strings.ReplaceAll(x, "AEDT", "UTC+11")
-	x = strings.ReplaceAll(y, "AEST", "UTC+10")
-	y = strings.ReplaceAll(x, "AKDT", "UTC-8")
-	x = strings.ReplaceAll(y, "AKST", "UTC-9")
-	y = strings.ReplaceAll(x, "AWDT", "UTC+9")
-	x = strings.ReplaceAll(y, "AWST", "UTC+8")
-	y = strings.ReplaceAll(x, "CAT", "UTC+2")
-	x = strings.ReplaceAll(y, "CDT", "UTC-5")
-	y = strings.ReplaceAll(x, "CEST", "UTC+2")
-	x = strings.ReplaceAll(y, "CET", "UTC+1")
-	y = strings.ReplaceAll(x, "CST", "UTC-6")
-	x = strings.ReplaceAll(y, "EAT", "UTC+3")
-	y = strings.ReplaceAll(x, "EDT", "UTC-4")
-	x = strings.ReplaceAll(y, "EEST", "UTC+3")
-	y = strings.ReplaceAll(x, "EET", "UTC+2")
-	x = strings.ReplaceAll(y, "EST", "UTC-5")
-	y = strings.ReplaceAll(x, "HDT", "UTC-9")
-	x = strings.ReplaceAll(y, "HKT", "UTC+8")
-	y = strings.ReplaceAll(x, "HST", "UTC-10")
-	x = strings.ReplaceAll(y, "JST", "UTC+9")
-	y = strings.ReplaceAll(x, "KST", "UTC+9")
-	x = strings.ReplaceAll(y, "MDT", "UTC-6")
-	y = strings.ReplaceAll(x, "MSD", "UTC+4")
-	x = strings.ReplaceAll(y, "MSK", "UTC+3")
-	y = strings.ReplaceAll(x, "MST", "UTC-7")
-	x = strings.ReplaceAll(y, "NZDT", "UTC+13")
-	y = strings.ReplaceAll(x, "NZST", "UTC+12")
-	x = strings.ReplaceAll(y, "PDT", "UTC-7")
-	y = strings.ReplaceAll(x, "PST", "UTC-8")
-	x = strings.ReplaceAll(y, "SGT", "UTC+8")
-	y = strings.ReplaceAll(x, "WEST", "UTC+1")
-	x = strings.ReplaceAll(y, "WET", "UTC")
-
-	// Check UTC, UTC+1, UTC+2, ... UTC+12, or UTC-1, UTC-2, .... UTC-11 //
-	ck, _ := regexp.MatchString(`^UTC$|^UTC[+-]([1-9]|1[0-2])$`, x)
-	if ck == true {
-		return x
+	if strings.HasPrefix(upper, "UTC") {
+		offsetPart := strings.TrimPrefix(upper, "UTC")
+		if offsetPart == "" {
+			return time.UTC, nil
+		}
+		offsetHours, err := strconv.Atoi(offsetPart)
+		if err == nil && offsetHours >= -12 && offsetHours <= 14 {
+			return time.FixedZone(upper, offsetHours*3600), nil
+		}
 	}
-	return "false"
+	return nil, fmt.Errorf("\033[33mERROR:\033[0m unknown timezone/offset: %q", tzStr)
+}
+
+func parseDateTime(dateStr, timeStr string) (time.Time, string, error) {
+	combined := dateStr + " " + timeStr
+	layouts := []struct {
+		layout    string
+		outFormat string
+	}{
+		{"2006-01-02 15:04:05", "2006-01-02 15:04:05 MST"},
+		{"2006/01/02 15:04:05", "2006/01/02 15:04:05 MST"},
+		{"2006-01-02 15:04", "2006-01-02 15:04 MST"},
+		{"2006/01/02 15:04", "2006/01/02 15:04 MST"},
+	}
+	for _, l := range layouts {
+		if t, err := time.ParseInLocation(l.layout, combined, time.UTC); err == nil {
+			return t, l.outFormat, nil
+		}
+	}
+	return time.Time{}, "", fmt.Errorf("invalid date/time format: %q %q", dateStr, timeStr)
+}
+
+func printConversion(origLabel, origVal, targetLabel, targetVal string) {
+	width := max(len(origLabel), len(targetLabel))
+	fmt.Printf("\033[36mConversion\033[0m\n")
+	fmt.Printf(" %*s: %s\n", width, origLabel, origVal)
+	fmt.Printf(" %*s: %s\n", width, targetLabel, targetVal)
+}
+
+func printUsage() {
+	fmt.Println("Usage:")
+	fmt.Println("  timeto [UNIX timestamp]")
+	fmt.Println("  timeto [YYYY-MM-DDTHH:MM:SSZ] [Target TZ]")
+	fmt.Println("  timeto [Date] [Time] [Source TZ]")
+	fmt.Println("  timeto [Date] [Time] [Source TZ] [Target TZ]")
 }
 
 func main() {
+	args := os.Args[1:]
 
-	// UNIX Time -> UTC //
-	if len(os.Args) == 2 {
+	switch len(args) {
+	case 1: // UNIX timestamp
+		val, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Invalid UNIX timestamp: %v\n", err)
+			os.Exit(1)
+		}
+		var t time.Time
+		switch {
+		case len(args[0]) >= 18: // Nanoseconds
+			t = time.Unix(0, val).UTC()
+		case len(args[0]) >= 15: // Microseconds
+			t = time.UnixMicro(val).UTC()
+		case len(args[0]) >= 12: // Milliseconds
+			t = time.UnixMilli(val).UTC()
+		default: // Seconds
+			t = time.Unix(val, 0).UTC()
+		}
+		printConversion("UNIX time", args[0], "UTC time", t.Format("2006-01-02 15:04:05.999999999 UTC"))
 
-		// test arg
-		//fmt.Println(len(os.Args))
-		//fmt.Println(len(os.Args[1]))
-		//fmt.Println(os.Args[1])
+	case 2: // RFC3339 -> Target TZ
+		t, err := time.Parse(time.RFC3339, args[0])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Invalid RFC3339 time format: %v\n", err)
+			os.Exit(1)
+		}
+		loc, err := parseLocation(args[1])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		printConversion("Original time", t.UTC().Format("2006/01/02 15:04:05 MST"),
+			"Target time", t.In(loc).Format("2006/01/02 15:04:05 MST"))
 
-		// Check 10 diigits for UNIX time in seconds
-		if len(os.Args[1]) < 10 {
-			fmt.Printf("\033[33mUNIX time requires 10 digits.\033[0m\n")
-			fmt.Println(" You put", len(os.Args[1]), "digits.")
+	case 3, 4: // Date Time SrcTZ [DstTZ]
+		srcLoc, err := parseLocation(args[2])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 
-		// test command 1 // go run main.go 1718000000
-		if len(os.Args[1]) == 10 {
-
-			// 1. Convert Arg to int64
-			unixSec, err := strconv.ParseInt(os.Args[1], 10, 64)
+		dstLoc := time.UTC
+		dstLabel := "UTC time"
+		if len(args) == 4 {
+			dstLoc, err = parseLocation(args[3])
 			if err != nil {
-				fmt.Printf("Invalid value: %v\n", err)
-				return
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
 			}
-
-			// 2. Convert Unix Time (sec) to UTC time
-			t := time.Unix(unixSec, 0).UTC()
-
-			// 3. Show the outputs as UTC format
-			fmt.Printf("\033[36mConversion\033[0m\n")
-			fmt.Println(" UNIX time:", os.Args[1])
-			fmt.Println("  UTC time:", t.Format("2006-01-02 15:04:05.999 UTC"))
+			dstLabel = "Target time"
 		}
 
-		// Check 13 diigits for UNIX time in miliseconds
-		if len(os.Args[1]) > 10 && len(os.Args[1]) < 13 {
-			fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
-			fmt.Println(" You put", len(os.Args[1]), "digits.")
+		t, outFormat, err := parseDateTime(args[0], args[1])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 
-		// test command 2 // go run main.go 1718000000123
-		if len(os.Args[1]) == 13 {
+		// Reconstruct time in source location
+		origTime := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, srcLoc)
+		printConversion("Original time", origTime.Format(outFormat), dstLabel, origTime.In(dstLoc).Format(outFormat))
 
-			// 1. Convert Arg to int64
-			unixMilli, err := strconv.ParseInt(os.Args[1], 10, 64)
-			if err != nil {
-				fmt.Printf("Invalid value: %v\n", err)
-				return
-			}
-
-			// 2. Convert milliseconds to seconds, nanoseconds, and UTC Time.
-			t := time.Unix(unixMilli/1000, (unixMilli%1000)*int64(time.Millisecond)).UTC()
-
-			// 3. Show the outputs as UTC format
-			fmt.Printf("\033[36mConversion\033[0m\n")
-			fmt.Println(" UNIX time:", os.Args[1])
-			fmt.Println("  UTC time:", t.Format("2006-01-02 15:04:05.999 UTC"))
-		}
-
-		// Check 13 diigits for UNIX time in miliseconds
-		if len(os.Args[1]) > 13 {
-			fmt.Printf("\033[33mUNIX time in milliseconds requires 13 digits.\033[0m\n")
-			fmt.Println(" You put", len(os.Args[1]), "digits.")
-		}
-
+	default:
+		printUsage()
+		os.Exit(0)
 	}
-
-	// UTC (RFC3339) -> TZ abbr. //
-	if len(os.Args) == 3 && len(os.Args[2]) >= 3 && len(os.Args[2]) <= 6 && convertTZ(2) != "false" {
-
-		// test arg
-		//fmt.Println(len(os.Args))
-		//fmt.Println(len(os.Args[2]))
-		//fmt.Println(os.Args[2])
-		//fmt.Println(len(os.Args[1]))
-		//fmt.Println(os.Args[1])
-
-		// Check 20 length for UTC (RFC3339)
-		if len(os.Args[1]) == 20 {
-
-			// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-			inc, _ := strconv.Atoi((strings.Trim(convertTZ(2), "UTC")))
-
-			// Split 2023-04-22T09:49:59Z to 2023 04 22T09:49:59Z
-			// Split 2023-04-22T09:49:59Z to 2023-04-22T09 49 59Z
-			arg1 := strings.Split(os.Args[1], "-")
-			arg2 := strings.Split(os.Args[1], ":")
-
-			// 22T09:49:59Z -> 22
-			rep1 := regexp.MustCompile(`T.*`)
-			str1 := rep1.ReplaceAllString(arg1[2], "")
-
-			// 2023-04-22T09 -> 09
-			rep2 := regexp.MustCompile(`.*T`)
-			str2 := rep2.ReplaceAllString(arg2[0], "")
-
-			// 59Z -> 59
-			rep3 := regexp.MustCompile(`Z.*`)
-			str3 := rep3.ReplaceAllString(arg2[2], "")
-
-			h, _ := strconv.Atoi(str2)
-			min, _ := strconv.Atoi(arg2[1])
-			s, _ := strconv.Atoi(str3)
-
-			// test command 3 // go run main.go 2023-04-22T09:49:59Z JST
-			// test command 4 // go run main.go 2023-04-22T09:49:59Z PDT
-			// test command 5 // go run main.go 2023-04-22T09:49:59Z Est
-			// test command 6 // go run main.go 2023-04-22T09:49:59Z cest
-			// test command 7 // go run main.go 2023-04-22T09:49:59Z west
-
-			year, _ := strconv.Atoi(arg1[0])
-			var m, _ = strconv.Atoi(arg1[1])
-			d, _ := strconv.Atoi(str1)
-
-			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone("UTC", 0*60*60))
-
-			// Define the target time zone
-			targetTimeZone := time.FixedZone(strings.ToUpper(os.Args[2]), inc*60*60)
-
-			// Convert the original time to the target time zone
-			targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
-
-			// Print the original and converted times
-			fmt.Printf("\033[36mConversion\033[0m\n")
-			fmt.Println(" Original time:", t.Format("2006/01/02 15:04:05 MST"))
-			fmt.Println("   Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
-
-		}
-
-	}
-
-	// UTC offset -> UTC //
-	if len(os.Args) == 4 && len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && convertTZ(3) != "false" {
-		
-		// test arg
-		//fmt.Println(len(os.Args))
-		//fmt.Println(len(os.Args[3]))
-		//fmt.Println(os.Args[3])
-		//fmt.Println(len(os.Args[2]))
-		//fmt.Println(os.Args[2])
-		//fmt.Println(len(os.Args[1]))
-		//fmt.Println(os.Args[1])
-
-		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc, _ := strconv.Atoi((strings.Trim(convertTZ(3), "UTC")))
-
-		// Split 2023/04/10 to 2023 4 10
-		// Split 2023-04-10 to 2023 4 10
-		arg1 := strings.Split(os.Args[1], "/")
-		arg2 := strings.Split(os.Args[1], "-")
-
-		// Split 09:00 to 9 00
-		arg3 := strings.Split(os.Args[2], ":")
-
-		// Change 09:00 to 9 00 00
-		if len(arg3) == 2 {
-			zero := "00"
-			arg3 = append(arg3, zero)
-		}
-
-		h, _ := strconv.Atoi(arg3[0])
-		min, _ := strconv.Atoi(arg3[1])
-		s, _ := strconv.Atoi(arg3[2])
-
-		if len(arg1) == 3 {
-			// test command 8 // go run main.go 2023/04/10 09:00 UTC-1
-			// test command 9 // go run main.go 2023/04/10 09:00 UTC
-			// test command 10 // go run main.go 2023/04/10 09:00 UTC+9
-			// test command 11 // go run main.go 2023/04/10 08:00 UTC-2
-			// test command 12 // go run main.go 2023/04/10 08:45 UTC-2
-			// test command 13 // go run main.go 2023/04/10 08:45:39 UTC-2
-			// test command 14 // go run main.go 2023/04/10 09:00 utc-5
-			// test command 15 // go run main.go 2023/04/10 09:00 utc
-			// test command 16 // go run main.go 2023/04/10 09:00 utc+9
-			// test command 17 // go run main.go 2023/04/10 08:00 uTC-6
-			// test command 18 // go run main.go 2023/04/10 08:45 uTC-7
-			// test command 19 // go run main.go 2023/04/10 08:45:39 uTC-8
-			// test command 20 // go run main.go 2023/04/22 09:00 NZST
-			// test command 21 // go run main.go 2023/04/22 09:00 AEDT
-			// test command 22 // go run main.go 2023/04/22 09:00 AEST
-			// test command 23 // go run main.go 2023/04/22 09:00 AWST
-			// test command 24 // go run main.go 2023/04/22 09:00 JST
-			// test command 25 // go run main.go 2023/04/22 09:00 HKT
-			// test command 26 // go run main.go 2023/04/22 09:00 SGT
-			// test command 27 // go run main.go 2023/04/22 09:00 PDt
-			// test command 28 // go run main.go 2023/04/22 09:00:00 pst
-
-			year, _ := strconv.Atoi(arg1[0])
-			var m, _ = strconv.Atoi(arg1[1])
-			d, _ := strconv.Atoi(arg1[2])
-
-			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone(strings.ToUpper(os.Args[3]), inc*60*60))
-
-			// Convert the time to UTC
-			utc := t.UTC()
-
-			if s == 0 {
-				// Print the original and converted times
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006/01/02 15:04 MST"))
-				fmt.Println("      UTC time:", utc.Format("2006/01/02 15:04 MST"))
-			}
-
-			if s != 0 {
-				// Print the original and converted times
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006/01/02 15:04:05 MST"))
-				fmt.Println("      UTC time:", utc.Format("2006/01/02 15:04:05 MST"))
-			}
-
-		} else if len(arg2) == 3 {
-			// test command 29 // go run main.go 2023-04-10 09:00 UTC-1
-			// test command 30 // go run main.go 2023-04-10 09:00 UTC
-			// test command 31 // go run main.go 2023-04-10 09:00 UTC+9
-			// test command 32 // go run main.go 2023-04-10 08:00 UTC-2
-			// test command 33 // go run main.go 2023-04-10 08:45 UTC-2
-			// test command 34 // go run main.go 2023-04-10 08:45:39 UTC-2
-			// test command 35 // go run main.go 2023-04-10 09:00 utc-5
-			// test command 36 // go run main.go 2023-04-10 09:00 utc
-			// test command 37 // go run main.go 2023-04-10 09:00 utc+9
-			// test command 38 // go run main.go 2023-04-10 08:00 uTC-6
-			// test command 39 // go run main.go 2023-04-10 08:45 uTC-7
-			// test command 40 // go run main.go 2023-04-10 08:45:39 uTC-8
-			// test command 41 // go run main.go 2023-04-22 09:00 NZST
-			// test command 42 // go run main.go 2023-04-22 09:00 AEDT
-			// test command 43 // go run main.go 2023-04-22 09:00 AEST
-			// test command 44 // go run main.go 2023-04-22 09:00 AWST
-			// test command 45 // go run main.go 2023-04-22 09:00 JST
-			// test command 46 // go run main.go 2023-04-22 09:00 HKT
-			// test command 47 // go run main.go 2023-04-22 09:00 SGT
-			// test command 48 // go run main.go 2023-04-22 09:00 PDt
-			// test command 49 // go run main.go 2023-04-22 09:00:00 pst
-
-			year, _ := strconv.Atoi(arg2[0])
-			var m, _ = strconv.Atoi(arg2[1])
-			d, _ := strconv.Atoi(arg2[2])
-
-			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone(strings.ToUpper(os.Args[3]), inc*60*60))
-
-			// Convert the time to UTC
-			utc := t.UTC()
-
-			if s == 0 {
-				// Print the original and converted times
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006-01-02 15:04 MST"))
-				fmt.Println("      UTC time:", utc.Format("2006-01-02 15:04 MST"))
-			}
-
-			if s != 0 {
-				// Print the original and converted times
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006-01-02 15:04:05 MST"))
-				fmt.Println("      UTC time:", utc.Format("2006-01-02 15:04:05 MST"))
-			}
-
-		}
-	}
-
-	// UTC offset or TZ abbr. -> UTC offset or TZ abbr. //
-	if len(os.Args) == 5 && (len(os.Args[3]) >= 3 && len(os.Args[3]) <= 6 && convertTZ(3) != "false") && (len(os.Args[4]) >= 3 && len(os.Args[4]) <= 6 && convertTZ(4) != "false") {
-		
-		// test arg
-		//fmt.Println(len(os.Args))
-		//fmt.Println(len(os.Args[4]))
-		//fmt.Println(os.Args[4])
-		//fmt.Println(len(os.Args[3]))
-		//fmt.Println(os.Args[3])
-		//fmt.Println(len(os.Args[2]))
-		//fmt.Println(os.Args[2])
-		//fmt.Println(len(os.Args[1]))
-		//fmt.Println(os.Args[1])
-
-		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc1, _ := strconv.Atoi((strings.Trim(convertTZ(3), "UTC")))
-
-		// UTC-1, UTC, UTC+1, UTC+2,... -> -1, 0, 1, 2, ....
-		inc2, _ := strconv.Atoi((strings.Trim(convertTZ(4), "UTC")))
-
-		// Split 2023/04/10 to 2023 4 10
-		// Split 2023-04-10 to 2023 4 10
-		arg1 := strings.Split(os.Args[1], "/")
-		arg2 := strings.Split(os.Args[1], "-")
-
-		// Split 09:00 to 9 00
-		arg3 := strings.Split(os.Args[2], ":")
-
-		// Change 09:00 to 9 00 00
-		if len(arg3) == 2 {
-			zero := "00"
-			arg3 = append(arg3, zero)
-		}
-
-		h, _ := strconv.Atoi(arg3[0])
-		min, _ := strconv.Atoi(arg3[1])
-		s, _ := strconv.Atoi(arg3[2])
-
-		if len(arg1) == 3 {
-			// test command 50 // go run main.go 2023/04/09 00:00 UTC UTC+9
-			// test command 51 // go run main.go 2023/04/09 00:00 UTC+1 UTC+9
-			// test command 52 // go run main.go 2023/04/09 00:00 UTC+2 UTC+9
-			// test command 53 // go run main.go 2023/04/09 00:00 UTC+3 UTC+9
-			// test command 54 // go run main.go 2023/04/09 00:00 UTC+4 UTC+9
-			// test command 55 // go run main.go 2023/04/09 00:30:01 UTC UTC+9
-			// test command 56 // go run main.go 2023/04/09 00:00 utc+5 utc+9
-			// test command 57 // go run main.go 2023/04/09 00:00 utc+6 utc+9
-			// test command 58 // go run main.go 2023/04/09 00:00 utc+7 utc+9
-			// test command 59 // go run main.go 2023/04/09 00:00 uTc+8 uTc+9
-			// test command 60 // go run main.go 2023/04/09 00:00 uTc+9 uTc+9
-			// test command 61 // go run main.go 2023/04/09 00:30:01 uTc+10 uTc+9
-			// test command 62 // go run main.go 2023/04/21 12:59:59 UTC-7 UTC+9
-			// test command 63 // go run main.go 2023/04/21 12:59:59 pdt jst
-			// test command 64 // go run main.go 2023/04/21 15:49:42 PDT NZST
-
-			year, _ := strconv.Atoi(arg1[0])
-			var m, _ = strconv.Atoi(arg1[1])
-			d, _ := strconv.Atoi(arg1[2])
-
-			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone(strings.ToUpper(os.Args[3]), inc1*60*60))
-
-			// Define the target time zone
-			targetTimeZone := time.FixedZone(strings.ToUpper(os.Args[4]), inc2*60*60)
-
-			// Convert the original time to the target time zone
-			targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
-
-			if s == 0 {
-				// Print the original and target times.
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006/01/02 15:04 MST"))
-				fmt.Println("   Target time:", targetTime.Format("2006/01/02 15:04 MST"))
-			}
-
-			if s != 0 {
-				// Print the original and target times.
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006/01/02 15:04:05 MST"))
-				fmt.Println("   Target time:", targetTime.Format("2006/01/02 15:04:05 MST"))
-			}
-
-		} else if len(arg2) == 3 {
-			// test command 65 // go run main.go 2023-04-09 00:00 UTC UTC+9
-			// test command 66 // go run main.go 2024-04-09 00:00 UTC+1 UTC+9
-			// test command 67 // go run main.go 2023-04-09 00:00 UTC+2 UTC+9
-			// test command 68 // go run main.go 2023-04-09 00:00 UTC+3 UTC+9
-			// test command 69 // go run main.go 2023-04-09 00:00 UTC+4 UTC+9
-			// test command 70 // go run main.go 2023-04-09 00:30:01 UTC UTC+9
-			// test command 71 // go run main.go 2023-04-09 00:00 utc+5 utc+9
-			// test command 72 // go run main.go 2024-04-09 00:00 utc+6 utc+9
-			// test command 73 // go run main.go 2023-04-09 00:00 utc+7 utc+9
-			// test command 74 // go run main.go 2023-04-09 00:00 uTc+8 uTc+9
-			// test command 75 // go run main.go 2023-04-09 00:00 uTc+9 uTc+9
-			// test command 76 // go run main.go 2023-04-09 00:30:01 uTc+10 uTc+9
-			// test command 77 // go run main.go 2023-04-21 12:59:59 UTC-7 UTC+9
-			// test command 78 // go run main.go 2023-04-21 12:59:59 pdt jst
-			// test command 79 // go run main.go 2023-04-21 15:49:42 PDT NZST
-
-			year, _ := strconv.Atoi(arg2[0])
-			var m, _ = strconv.Atoi(arg2[1])
-			d, _ := strconv.Atoi(arg2[2])
-
-			t := time.Date(year, time.Month(m), d, h, min, s, 0, time.FixedZone(strings.ToUpper(os.Args[3]), inc1*60*60))
-
-			// Define the target time zone
-			targetTimeZone := time.FixedZone(strings.ToUpper(os.Args[4]), inc2*60*60)
-
-			// Convert the original time to the target time zone
-			targetTime := t.In(targetTimeZone).Add(time.Hour * time.Duration(0))
-
-			if s == 0 {
-				// Print the original and target times.
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006-01-02 15:04 MST"))
-				fmt.Println("   Target time:", targetTime.Format("2006-01-02 15:04 MST"))
-			}
-
-			if s != 0 {
-				// Print the original and target times.
-				fmt.Printf("\033[36mConversion\033[0m\n")
-				fmt.Println(" Original time:", t.Format("2006-01-02 15:04:05 MST"))
-				fmt.Println("   Target time:", targetTime.Format("2006-01-02 15:04:05 MST"))
-			}
-
-		}
-	}
-
 }

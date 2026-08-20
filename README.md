@@ -1,96 +1,123 @@
-# timeto
+# timeto 
 
-![Go](https://img.shields.io/badge/Go-1.25+-informational)
-![License](https://img.shields.io/badge/license-MIT-blue)
+![Go](https://img.shields.io/badge/Go-1.25+-informational) 
+![License](https://img.shields.io/badge/license-MIT-blue) 
 
-timeto is a simple command-line tool for time difference calculation.
+`timeto` is a simple command-line tool for timezone and time difference calculations. 
 
-![clock](images/clock.png)
+![clock](images/clock.png) 
 
-## Getting Started
+## Getting Started 
 
-```bash or powershell
-go install github.com/kazsk1/timeto@main
-```
+```sh 
+go install github.com/kazsk1/timeto@main 
+``` 
 
 ## Usage
-1. Convert UTC (RFC3339) to target timezone abbreviations such as JST, SGT, etc.
-   ```bash or powreshell
-   timeto [YYYY-MM-DDTHH:MM:SSZ] [TG Abbr]
-   ```
 
-2. Convert UTC offset to UTC.
-   ```bash or powershell
-   timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset]
-   timeto [YYYY-MM-DD] [HH:MM:SS] [OG UTC offset]
-   timeto [YYYY/MM/DD] [HH:MM] [OG UTC offset]
-   timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset]
-   ```
+  1. Convert UNIX Timestamp to UTC
+     ```sh 
+     timeto [UNIX timestamp]
+     ``` 
 
-3. Convert original UTC offset to target UTC offset.
-   ```bash or powershell
-   timeto [YYYY/MM/DD] [HH:MM:SS] [OG UTC offset] [TG UTC offset]
-   timeto [YYYY-MM-DD] [HH:MM:SS] [OG UTC offset] [TG UTC offset]
-   timeto [YYYY/MM/DD] [HH:MM] [OG UTC offset] [TG UTC offset]
-   timeto [YYYY-MM-DD] [HH:MM] [OG UTC offset] [TG UTC offset]
-   ```
+     > Supported Formats:
+     > 
+     > • seconds (10 digits), milliseconds (13 digits), microseconds (16 digits), and nanoseconds (19 digits).
 
-4. Convert original timezone abbreviations to target timezone abbreviations.
-   ```bash or powershell
-   timeto [YYYY/MM/DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
-   timeto [YYYY-MM-DD] [HH:MM:SS] [OG Abbr] [TG Abbr]
-   timeto [YYYY/MM/DD] [HH:MM] [OG Abbr] [TG Abbr]
-   timeto [YYYY-MM-DD] [HH:MM] [OG Abbr] [TG Abbr]
-   ```
+  2. Convert RFC3339 to Target Timezone
 
-5. Convert UNIX time to UTC.
-   ```bash or powershell
-   timeto [UNIX time in seconds] 
-   timeto [UNIX time in milliseconds] 
-   ```
+     ```sh 
+     timeto [YYYY-MM-DDTHH:MM:SSZ] [Target TZ]
+     ``` 
+
+  3. Convert Date & Time to UTC
+
+     ```sh 
+     timeto [Date] [Time] [Source TZ]
+     ``` 
+
+  4. Convert Date & Time to Target Timezone
+
+     ```sh 
+     timeto [Date] [Time] [Source TZ] [Target TZ]
+     ``` 
+
+     > Supported Formats:
+     > 
+     > • Date: YYYY-MM-DD or YYYY/MM/DD (output preserves your input separator)
+     > 
+     > • Time: HH:MM:SS or HH:MM
+     > 
+     > • Timezones: UTC offsets (UTC-12 to UTC+14) or abbreviations (JST, PST, EST, UTC, CEST, etc.)
+
 
 ## Examples
 
-1. Convert UTC (RFC3339) to JST.  
-   ```bash or powershell
-   timeto 2023-04-22T09:49:59Z JST
-   ```
-   > Conversion  
-   > &ensp; Original time: 2023/04/22 09:49:59 UTC  
-   > &ensp; &ensp; Target time: 2023/04/22 18:49:59 JST  
+  1. UNIX Timestamp to UTC
 
-2. Convert UTC+9 to UTC.  
-   ```bash or powershell
-   timeto 2023/04/10 09:00 UTC+9
-   ```
-   > Conversion  
-   > &ensp; Original time: 2023/04/10 09:00 UTC+9  
-   > &ensp; &ensp; &ensp; UTC time: 2023/04/10 00:00 UTC  
+     ```sh 
+     timeto 1718000000123
+     ``` 
 
-3. Convert UTC-7 to UTC+9.
-   ```bash or powershell
-   timeto 2023/04/21 12:59:59 UTC-7 UTC+9
-   ```
-   > Conversion  
-   > &ensp; Original time: 2023/04/21 12:59:59 UTC-7  
-   > &ensp; &ensp; Target time: 2023/04/22 04:59:59 UTC+9  
+     > Conversion
+     > 
+     >   UNIX time: 1718000000123
+     > 
+     >     UTC time: 2024-06-10 06:13:20.123 UTC
 
-4. Convert PDT to NZST.
-   ```bash or powershell
-   timeto 2023-04-21 15:49:42 PDT NZST
-   ```
-   > Conversion  
-   > &ensp; Original time: 2023-04-21 15:49:42 PDT  
-   > &ensp; &ensp; Target time: 2023-04-22 10:49:42 NZST  
+  2. RFC3339 (UTC) to JST
 
-5. Convert UNIX time to UTC.
-   ```bash or powershell
-   timeto 1718000000123
-   ```
-   > Conversion  
-   > &ensp; UNIX time: 1718000000123  
-   > &ensp; &ensp;UTC time: 2024-06-10 06:13:20.123 UTC 
+     ```sh 
+     timeto 2023-04-22T09:49:59Z JST
+     ``` 
 
+     > Conversion
+     > 
+     >   Original time: 2023/04/22 09:49:59 UTC
+     > 
+     >     Target time: 2023/04/22 18:49:59 JST
+
+  3. Source Time to UTC
+
+     ```sh 
+     timeto 2023/04/10 09:00 UTC+9
+     ``` 
+
+     > Conversion
+     > 
+     >   Original time: 2023/04/10 09:00 UTC+9
+     > 
+     >       UTC time: 2023/04/10 00:00 UTC
+
+  4. UTC Offset Conversion
+
+     ```sh 
+     timeto 2023/04/21 12:59:59 UTC-7 UTC+9
+     ``` 
+
+     > Conversion
+     > 
+     >   Original time: 2023/04/21 12:59:59 UTC-7
+     > 
+     >     Target time: 2023/04/22 04:59:59 UTC+9
+
+  5. Timezone Abbreviation Conversion
+
+     ```sh 
+     timeto 2023-04-21 15:49:42 PDT NZST
+     ``` 
+
+     > Conversion
+     > 
+     >   Original time: 2023-04-21 15:49:42 PDT
+     > 
+     >     Target time: 2023-04-22 10:49:42 NZST
+  
+## Supported Timezone Abbreviations
+
+  AEDT, AEST, AKDT, AKST, AWDT, AWST, CAT, CDT, CEST, CET, CST, EAT, EDT, EEST, EET, EST, HDT, HKT, HST, JST, KST, MDT, MSD, MSK, MST, NZDT, NZST, PDT, PST, SGT, WEST, WET, UTC
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+ 
