@@ -58,7 +58,10 @@ func parseDateTime(dateStr, timeStr string) (time.Time, string, error) {
 }
 
 func printConversion(origLabel, origVal, targetLabel, targetVal string) {
-	width := max(len(origLabel), len(targetLabel))
+	width := len(origLabel)
+	if len(targetLabel) > width {
+		width = len(targetLabel)
+	}
 	fmt.Printf("\033[36mConversion\033[0m\n")
 	fmt.Printf(" %*s: %s\n", width, origLabel, origVal)
 	fmt.Printf(" %*s: %s\n", width, targetLabel, targetVal)
