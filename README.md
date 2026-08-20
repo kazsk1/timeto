@@ -10,6 +10,7 @@
 ## Getting Started 
 
 ```sh 
+go env -w GOPROXY=direct 
 go install github.com/kazsk1/timeto@main 
 ``` 
 
