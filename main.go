@@ -48,6 +48,10 @@ func parseDateTime(dateStr, timeStr string) (time.Time, string, error) {
 		{"2006/01/02 15:04:05", "2006/01/02 15:04:05 MST"},
 		{"2006-01-02 15:04", "2006-01-02 15:04 MST"},
 		{"2006/01/02 15:04", "2006/01/02 15:04 MST"},
+		{"2006-1-2 15:04:05", "2006-01-02 15:04:05 MST"},
+		{"2006/1/2 15:04:05", "2006/01/02 15:04:05 MST"},
+		{"2006-1-2 15:04", "2006-01-02 15:04 MST"},
+		{"2006/1/2 15:04", "2006/01/02 15:04 MST"},
 	}
 	for _, l := range layouts {
 		if t, err := time.ParseInLocation(l.layout, combined, time.UTC); err == nil {
