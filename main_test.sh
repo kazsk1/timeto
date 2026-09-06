@@ -78,3 +78,5 @@
 // test command 77 // go run main.go 2023-04-21 12:59:59 UTC-7 UTC+9 
 // test command 78 // go run main.go 2023-04-21 12:59:59 pdt jst 
 // test command 79 // go run main.go 2023-04-21 15:49:42 PDT NZST 
+// test command 80 // go run main.go 2026/9/3 09:00 JST UTC 
+// test command 81 // go run main.go 2026-9-3 09:00 JST UTC 

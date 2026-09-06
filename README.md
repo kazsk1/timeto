@@ -44,7 +44,7 @@ go install github.com/kazsk1/timeto@main
 
      > Supported Formats:
      > 
-     > • Date: YYYY-MM-DD or YYYY/MM/DD (output preserves your input separator)
+     > • Date: YYYY-MM-DD or YYYY/MM/DD (single-digit months and days like YYYY/M/D are also supported; output preserves your input separator)
      > 
      > • Time: HH:MM:SS or HH:MM
      > 
