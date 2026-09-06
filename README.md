@@ -44,7 +44,7 @@ go install github.com/kazsk1/timeto@main
 
      > Supported Formats:
      > 
-     > • Date: YYYY-MM-DD or YYYY/MM/DD or YYYY/M/D or YYYY/M/D
+     > • Date: YYYY-MM-DD or YYYY/MM/DD or YYYY-M-D or YYYY/M/D
      > 
      > • Time: HH:MM:SS or HH:MM
      > 
